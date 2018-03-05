@@ -8,6 +8,10 @@
 int main(int argv, char *argc[])
 {
 	bool bulletExists = false;
+	bool moveRight = false;
+	bool moveLeft = false;
+	bool moveDown = false;
+	bool moveUp = false;
 	int c = 0;
 	SDL_Window *window = NULL;
 	SDL_Renderer *renderer = NULL;
@@ -37,44 +41,34 @@ int main(int argv, char *argc[])
 		SDL_Event event;
 		if (SDL_PollEvent(&event) != 0)
 		{
-			switch (event.type)
-			{
-			case SDL_QUIT:
+
+			if (event.type == SDL_QUIT) {
 				loop = false;
-			case SDL_KEYDOWN:
-				switch (event.key.keysym.sym)
-				{
-				case SDLK_UP:
-					rambo.y -= 10;
-					/*if (event.key.keysym.sym == SDLK_LEFT) {
-					rambo.x -= 10;
-					}
-					else if (event.key.keysym.sym == SDLK_RIGHT) {
-					rambo.x += 10;*/
-					break;
-				case SDLK_DOWN:
-					rambo.y += 10;
-					/*if (event.key.keysym.sym == SDLK_LEFT) {
-						rambo.x -= 10;
-					}
-					else if (event.key.keysym.sym == SDLK_RIGHT) {
-						rambo.x += 10;*/
-					
-					break;
-				case SDLK_LEFT:
-					rambo.x -= 10;
-					break;
-				case SDLK_RIGHT:
-					rambo.x += 10;
-					break;
-				case SDLK_ESCAPE:
+			}
+			if (event.type == SDL_KEYDOWN) {
+
+				if (event.key.keysym.sym == SDLK_UP) {
+					moveUp = true;
+				}
+				if (event.key.keysym.sym == SDLK_DOWN) {
+					moveDown = true;
+				}
+				if (event.key.keysym.sym == SDLK_LEFT) {
+					moveLeft = true;
+				}
+				if (event.key.keysym.sym == SDLK_RIGHT) {
+					moveRight = true;
+				}
+				if (event.key.keysym.sym == SDLK_ESCAPE) {
 					loop = false;
-				case SDLK_SPACE:
+				}
+				if (event.key.keysym.sym == SDLK_SPACE) {
+
 					switch (c) {
 					case 0:
 						bulletExists = true;
-						bullet[c].x = rambo.x +80;
-						bullet[c].y = rambo.y+35;
+						bullet[c].x = rambo.x + 80;
+						bullet[c].y = rambo.y + 35;
 						bullet[c].w = 40;
 						bullet[c].h = 10;
 						c++;
@@ -112,36 +106,69 @@ int main(int argv, char *argc[])
 						c = 0;
 						break;
 					}
-				
+
+
 				}
 			}
-		}
-		if (rambo.x < 0) {
-			rambo.x = 0;
-		}
-		if (rambo.x > 1200) {
-			rambo.x = 1200;
-		}
-		if (rambo.y < 0) {
-			rambo.y = 0;
-		}
-		if (rambo.y > 640) {
-			rambo.y = 640;
-		}
-		SDL_SetRenderDrawColor(renderer, 255, 0, 0, 255);
-		SDL_RenderFillRect(renderer, &rambo);
-		SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
-		if (bulletExists = true) {
-			for (int i = 0; i < 5; i++) {
-			SDL_RenderFillRect(renderer, &bullet[i]);
-				bullet[i].x += 15;
-			}
-		}
-		SDL_RenderPresent(renderer);
+				if (event.type == SDL_KEYUP) {
+					if (event.key.keysym.sym == SDLK_UP) {
+						moveUp = false;
+					}
+					if (event.key.keysym.sym == SDLK_DOWN) {
+						moveDown = false;
+					}
+					if (event.key.keysym.sym == SDLK_LEFT) {
+						moveLeft = false;
+					}
+					if (event.key.keysym.sym == SDLK_RIGHT) {
+						moveRight = false;
+					}
 
-		SDL_SetRenderDrawColor(renderer, 0, 100, 255, 255);
-		SDL_RenderClear(renderer);
-		SDL_Delay(4);
+				}
+			
+		}
+				if (rambo.x < 0) {
+					rambo.x = 0;
+				}
+				if (rambo.x > 1200) {
+					rambo.x = 1200;
+				}
+				if (rambo.y < 0) {
+					rambo.y = 0;
+				}
+				if (rambo.y > 640) {
+					rambo.y = 640;
+				}
+				
+				
+			
+		if (moveDown == true) {
+			rambo.y += 10;
+		}
+		if (moveUp == true) {
+			rambo.y -= 10;
+		}
+		if (moveLeft == true) {
+			rambo.x -= 10;
+		}
+		if (moveRight == true) {
+			rambo.x += 10;
+		}
+			SDL_SetRenderDrawColor(renderer, 255, 0, 0, 255);
+			SDL_RenderFillRect(renderer, &rambo);
+			SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
+			if (bulletExists = true) {
+				for (int i = 0; i < 5; i++) {
+					SDL_RenderFillRect(renderer, &bullet[i]);
+					bullet[i].x += 15;
+				}
+			}
+			SDL_RenderPresent(renderer);
+
+			SDL_SetRenderDrawColor(renderer, 0, 100, 255, 255);
+			SDL_RenderClear(renderer);
+			SDL_Delay(8);
+
+		}
+		return 0;
 	}
-	return 0;
-}
